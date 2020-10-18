@@ -1,0 +1,8 @@
+docs
+icons
+LICENSE.txt
+CONTRIBUTING.md
+Dockerfile
+virustotal_test.py
+_config.yml
+.gitignore
