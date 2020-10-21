@@ -1,22 +1,23 @@
 FROM ubuntu:focal
 
+ENV TZ=Europe/Madrid
 ENV USER masc
 ENV HOME /home/${USER}
-ENV DEBIAN_FRONTEND noninteractive  
+ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR ${HOME}
-ADD setup.py ${HOME}/
-ADD masc/ ${HOME}/masc/
-ADD README.md ${HOME}/
+ADD . ${HOME}
 
 RUN apt -y update \
     && apt install --no-install-recommends -y \
-        git \
+        tzdata \
+        unzip \
         python3 \
         python3-pip \
         python3-dev \
         libmagic1 \
-        build-essential 
+        build-essential \
+    && apt clean && rm -rf /var/cache/apt/*
 
 RUN pip3 install --upgrade pip \
     && pip3 install \
@@ -30,5 +31,7 @@ RUN pip3 install --upgrade pip \
         pyclamd 
 
 RUN python3 setup.py install
+
+RUN unzip samples.zip && rm samples.zip
 
 CMD ["/usr/local/bin/masc","-h"]
