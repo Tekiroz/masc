@@ -1,12 +1,10 @@
-FROM ubuntu:focal
+FROM debian:10.6
 
 ENV TZ=Europe/Madrid
 ENV USER masc
 ENV HOME /home/${USER}
 ENV DEBIAN_FRONTEND noninteractive
-
-WORKDIR ${HOME}
-ADD . ${HOME}
+WORKDIR /opt
 
 RUN apt -y update \
     && apt install --no-install-recommends -y \
@@ -17,7 +15,8 @@ RUN apt -y update \
         python3-dev \
         libmagic1 \
         build-essential \
-    && apt clean && rm -rf /var/cache/apt/*
+        python3-setuptools \
+    && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
 RUN pip3 install --upgrade pip \
     && pip3 install \
@@ -30,8 +29,10 @@ RUN pip3 install --upgrade pip \
         progress \
         pyclamd 
 
+COPY . /opt
+RUN mkdir -p ${HOME} && unzip samples.zip -d ${HOME} && rm samples.zip
 RUN python3 setup.py install
 
-RUN unzip samples.zip && rm samples.zip
+WORKDIR ${HOME}
 
 CMD ["/usr/local/bin/masc","-h"]
