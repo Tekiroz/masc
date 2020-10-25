@@ -18,8 +18,10 @@ RUN apt -y update \
         python3-setuptools \
     && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
-RUN pip3 install --upgrade pip \
-    && pip3 install \
+RUN python3 -m pip install --upgrade pip \
+    && python3 -m pip install \
+        wheel \
+    && python3 -m pip install \
         setuptools \
         yara-python \
         python-magic \
